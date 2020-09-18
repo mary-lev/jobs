@@ -1,11 +1,9 @@
 from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.http import HttpResponseNotFound, HttpResponseServerError, Http404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import ListView, CreateView, FormView, UpdateView
-from django.views.generic.edit import FormMixin
+from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.contrib.auth.views import LoginView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
 
 from .models import Vacancy, Company, Specialty, Application, Resume
@@ -47,6 +45,7 @@ def show_one_vacancy(request, vacancy_id):
     return render(request, 'vacancy.html', {
         'vacancy': vacancy,
         'form': form})
+
 
 def sent_application(request, vacancy_id):
     return render(request, 'sent.html', {'vacancy_id': vacancy_id})
@@ -105,10 +104,9 @@ class CompanyEditView(UpdateView):
     template_name = 'company-edit.html'
     form_class = CompanyForm
 
-
     def get_success_url(self, **kwargs):
         return reverse_lazy('vacancies:company-edit', args=(self.object.id,))
-    
+
 
 class CompanyView(DetailView):
     model = Company
@@ -133,5 +131,3 @@ class VacancyCatListView(ListView):
     def get_queryset(self):
         specialty = Specialty.objects.get(code=self.kwargs['category']).id
         return Vacancy.objects.filter(specialty=specialty)
-
-

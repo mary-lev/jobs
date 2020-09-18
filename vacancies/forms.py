@@ -1,10 +1,10 @@
 from django import forms
-from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Field, Div
+from crispy_forms.layout import Submit
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from .models import Application, Company, Vacancy
+
 
 class LoginForm(AuthenticationForm):
 
@@ -29,7 +29,7 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for fieldname in ['username', 'password1', 'password2',]:
+        for fieldname in ['username', 'password1', 'password2', ]:
             self.fields[fieldname].help_text = None
 
         self.fields['username'].label = 'Логин'
@@ -45,13 +45,10 @@ class RegisterForm(UserCreationForm):
 class VacancySend(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ['written_username','written_phone', 'written_cover_letter']
-
+        fields = ['written_username', 'written_phone', 'written_cover_letter']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-
         self.fields['written_username'].label = 'Вас зовут'
         self.fields['written_phone'].label = 'Ваш телефон'
         self.fields['written_cover_letter'].label = 'Сопроводительное письмо'
@@ -73,13 +70,10 @@ class CompanyForm(forms.ModelForm):
         'employee_count': forms.TextInput(attrs={'class': 'form-control'}),
         'location': forms.TextInput(attrs={'class': 'form-control'}),
         'description': forms.Textarea(attrs={'class': 'form-control'}),
-        #'logo': forms.ClearableFileInput(attrs={'class': 'btn btn-info px-4', 'style': 'visibility:hidden;'}),
         }
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['name'].label = 'Название компании'
         self.fields['employee_count'].label = 'Количество человек в компании'
         self.fields['location'].label = 'География'
