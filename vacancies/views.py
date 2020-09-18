@@ -5,7 +5,6 @@ from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
-from django.forms import formset_factory
 
 from .models import Vacancy, Company, Specialty, Application, Resume
 from .forms import LoginForm, RegisterForm, ApplicationForm, CompanyForm, VacancyForm
