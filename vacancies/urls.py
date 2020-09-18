@@ -27,7 +27,7 @@ urlpatterns = [
     path('company-edit/<int:pk>/', views.CompanyEditView.as_view(), name='company-edit'),
     path('vacancy-list', views.MyVacancyListView.as_view(), name='my_vacancies'),
     path('vacancy-edit/<int:pk>/', views.VacancyEditView.as_view(), name='vacancy_edit'),
-    path('vacancy-create', views.VacancyCreateView.as_view(), name='vacancy_create'),
+    path('vacancy-create', views.create_vacancy, name='vacancy_create'),
     path('resume-edit', views.ResumeCreateView.as_view, name='resume-edit'),
 ]
 

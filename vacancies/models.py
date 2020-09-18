@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
-    logo = models.ImageField(upload_to='company_images')
-    description = models.CharField(max_length=100, blank=True, null=True)
-    employee_count = models.IntegerField()
-    owner = models.ForeignKey(User, related_name='companies', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100, verbose_name='Название компании')
+    location = models.CharField(max_length=100, verbose_name='География')
+    logo = models.ImageField(upload_to='company_images', verbose_name='Логотип')
+    description = models.CharField(max_length=100, verbose_name='Информация о компании')
+    employee_count = models.IntegerField(verbose_name='Количество человек в компании')
+    owner = models.ForeignKey(User, related_name='companies', on_delete=models.CASCADE)
 
 
 class Specialty(models.Model):
@@ -18,23 +18,24 @@ class Specialty(models.Model):
 
 
 class Vacancy(models.Model):
-    title = models.CharField(max_length=100, blank=True, null=True)
-    specialty = models.ForeignKey(Specialty, related_name='vacancies', on_delete=models.CASCADE)
+    title = models.CharField(max_length=40, blank=True, null=True, verbose_name='Название вакансии')
+    specialty = models.ForeignKey(Specialty, related_name='vacancies', on_delete=models.CASCADE, verbose_name='Специализация')
     company = models.ForeignKey(
         Company,
         related_name='vacancies',
-        on_delete=models.CASCADE)
-    skills = models.CharField(max_length=100, blank=True, null=True)
-    description = models.CharField(max_length=100, blank=True, null=True)
-    salary_min = models.IntegerField()
-    salary_max = models.IntegerField()
+        on_delete=models.CASCADE,
+        verbose_name='Название компании')
+    skills = models.CharField(max_length=100, blank=True, null=True, verbose_name='Требуемые навыки')
+    description = models.CharField(max_length=100, blank=True, null=True, verbose_name='Описание вакансии')
+    salary_min = models.IntegerField(verbose_name='Зарплата от')
+    salary_max = models.IntegerField(verbose_name='Зарплата до')
     published_at = models.DateTimeField(auto_now=True)
 
 
 class Application(models.Model):
-    written_username = models.CharField(max_length=50)
-    written_phone = models.CharField(max_length=10)
-    written_cover_letter = models.TextField(max_length=1000)
+    written_username = models.CharField(max_length=50, verbose_name='Вас зовут')
+    written_phone = models.CharField(max_length=10, verbose_name='Ваш телефон')
+    written_cover_letter = models.TextField(max_length=1000, verbose_name='Сопроводительное письмо')
     vacancy = models.ForeignKey(
         Vacancy,
         related_name='applications',

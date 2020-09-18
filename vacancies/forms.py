@@ -1,9 +1,9 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, Row, Column, Div
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from .models import Application, Company, Vacancy
+from .models import Application, Company, Vacancy, Specialty
 
 
 class LoginForm(AuthenticationForm):
@@ -42,17 +42,13 @@ class RegisterForm(UserCreationForm):
         self.helper.label_class = 'text-muted'
 
 
-class VacancySend(forms.ModelForm):
+class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ['written_username', 'written_phone', 'written_cover_letter']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['written_username'].label = 'Вас зовут'
-        self.fields['written_phone'].label = 'Ваш телефон'
-        self.fields['written_cover_letter'].label = 'Сопроводительное письмо'
-
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Отправить отклик', css_class='btn btn-primary mt-4 mb-2'))
@@ -66,30 +62,53 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name', 'employee_count', 'location', 'description', 'logo']
         widgets = {
-        'name': forms.TextInput(attrs={'class': 'form-control'}),
-        'employee_count': forms.TextInput(attrs={'class': 'form-control'}),
-        'location': forms.TextInput(attrs={'class': 'form-control'}),
         'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['name'].label = 'Название компании'
-        self.fields['employee_count'].label = 'Количество человек в компании'
-        self.fields['location'].label = 'География'
-        self.fields['description'].label = 'Информация о компании'
-        self.fields['logo'].label = 'Логотип'
-
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Сохранить', css_class='btn btn-info'))
 
         self.helper.form_class = 'col-12 col-md-6'
         self.helper.label_class = 'mb-2 text-dark'
-        self.helper.field_class = 'form-control'
 
 
 class VacancyForm(forms.ModelForm):
     class Meta:
         model = Vacancy
-        fields = ['title', 'specialty']
+        fields = ['title', 'specialty', 'salary_min', 'salary_max', 'skills', 'description']
+        widgets = {
+        'specialty': forms.Select(attrs={'class': 'custom-select mr-sm-2'}),
+        'description': forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        specialties = Specialty.objects.all()
+        specialty_names = [(specialty.id, specialty.title) for specialty in specialties]
+        self.fields['specialty'].choices=specialty_names
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'POST'
+        self.helper.label_class = 'mb-2 text-dark'
+        self.helper.field_class = '"form-control"'
+
+        self.helper.layout = Layout(
+            Row(
+                Column('title', css_class='col-12 col-md-6'),
+                Column('specialty', css_class='col-12 col-md-6'),
+                css_class='row'
+                ),
+            Row(
+                Column('salary_min', css_class='col-12 col-md-6'),
+                Column('salary_max', css_class='col-12 col-md-6'),
+                css_class='row'
+                ),
+            'skills',
+            'description',
+            Submit('submit', 'Сохранить', css_class='btn btn-info')
+                )
+            

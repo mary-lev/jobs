@@ -5,9 +5,10 @@ from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
+from django.forms import formset_factory
 
 from .models import Vacancy, Company, Specialty, Application, Resume
-from .forms import LoginForm, RegisterForm, VacancySend, CompanyForm, VacancyForm
+from .forms import LoginForm, RegisterForm, ApplicationForm, CompanyForm, VacancyForm
 
 
 def custom_handler404(request, exception):
@@ -28,23 +29,45 @@ def index(request):
 def show_one_vacancy(request, vacancy_id):
     vacancy = Vacancy.objects.get(id=vacancy_id)
     if request.method == 'POST':
-        form = VacancySend(request.POST)
+        form = ApplicationForm(request.POST)
         if form.is_valid():
             new_application = Application.objects.create(
-                user=request.user,
-                vacancy=vacancy,
-                written_username=form.cleaned_data['written_username'],
+                written_cover_letter=form.cleaned_data['written_cover_letter'],
                 written_phone=form.cleaned_data['written_phone'],
-                written_cover_letter=form.cleaned_data['written_cover_letter'])
+                written_username=form.cleaned_data['written_username'],
+                user=request.user,
+                vacancy=vacancy)
             new_application.save()
             return redirect('vacancies:sent', vacancy_id=vacancy.id)
         else:
             ''
     else:
-        form = VacancySend()
+        form = ApplicationForm()
     return render(request, 'vacancy.html', {
         'vacancy': vacancy,
         'form': form})
+
+
+def create_vacancy(request):
+    company = Company.objects.filter(owner=request.user).first()
+    if request.method == 'POST':
+        form = VacancyForm(request.POST)
+        if form.is_valid():
+            new_vacancy = Vacancy.objects.create(
+                title=form.cleaned_data['title'],
+                specialty=form.cleaned_data['specialty'],
+                company=company,
+                skills=form.cleaned_data['skills'],
+                description=form.cleaned_data['description'],
+                salary_min=form.cleaned_data['salary_min'],
+                salary_max=form.cleaned_data['salary_max'])
+            new_vacancy.save()
+            return redirect('vacancies:vacancy_edit', pk=new_vacancy.id)
+        else:
+            ''
+    else:
+        form = VacancyForm()
+    return render(request, 'vacancy-edit.html', {'form': form})
 
 
 def sent_application(request, vacancy_id):
@@ -74,13 +97,16 @@ class MyLoginView(LoginView):
 class VacancyCreateView(CreateView):
     model = Vacancy
     template_name = 'vacancy-edit.html'
-    fields = '__all__'
+    form_class = VacancyForm
 
 
 class VacancyEditView(UpdateView):
     model = Vacancy
     template_name = 'vacancy-edit.html'
     form_class = VacancyForm
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:vacancy_edit', args=(self.object.id,))
 
 
 class MyVacancyListView(ListView):
