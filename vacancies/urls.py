@@ -23,13 +23,15 @@ urlpatterns = [
     path('vacancies/<int:vacancy_id>/send', views.sent_application, name='sent'),
     path('companies/<int:pk>/', views.CompanyView.as_view(), name='company'),
     path('mycompany', views.has_company, name='mycompany'),
+    path('myresume', views.has_resume, name='myresume'),
     path('company-create', views.CompanyCreateView.as_view(), name='company-create'),
     path('company-edit/<int:pk>/', views.CompanyEditView.as_view(), name='company-edit'),
     path('vacancy-list', views.MyVacancyListView.as_view(), name='my_vacancies'),
     path('vacancy-edit/<int:pk>/', views.VacancyEditView.as_view(), name='vacancy-edit'),
     path('vacancy-create', views.create_vacancy, name='vacancy-create'),
-    path('resume-edit', views.ResumeCreateView.as_view(), name='resume-edit'),
-    path('resume-create', views.ResumeUpdateView.as_view(), name='resume-create'),
+    path('resume-edit', views.ResumeUpdateView.as_view(), name='resume-edit'),
+    path('resume-create', views.ResumeCreateView.as_view(), name='resume-create'),
+    path('search/', views.VacancySearch.as_view(), name='search'),
 ]
 
 if settings.DEBUG:

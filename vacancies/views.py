@@ -1,13 +1,14 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Vacancy, Company, Specialty, Application, Resume
-from .forms import LoginForm, RegisterForm, ApplicationForm, CompanyForm, VacancyForm
+from .forms import LoginForm, RegisterForm, ApplicationForm, CompanyForm, VacancyForm, ResumeForm
 
 
 def custom_handler404(request, exception):
@@ -81,6 +82,13 @@ def has_company(request):
         return redirect('vacancies:company-create')
 
 
+def has_resume(request):
+    resume = Resume.objects.filter(user=request.user).first()
+    if resume:
+        return render(request, 'resume-edit.html', {'resume': resume.id})
+    return render(request, 'resume-create.html', {})
+
+
 class MySignupView(CreateView):
     form_class = RegisterForm
     success_url = reverse_lazy('vacancies:login')
@@ -105,7 +113,7 @@ class VacancyEditView(UpdateView):
     form_class = VacancyForm
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('vacancies:vacancy_edit', args=(self.object.id,))
+        return reverse_lazy('vacancies:vacancy-edit', args=(self.object.id,))
 
 
 class MyVacancyListView(ListView):
@@ -138,20 +146,27 @@ class CompanyView(DetailView):
     template_name = 'company.html'
 
 
-class ResumeCreateView(CreateView):
+class ResumeCreateView(LoginRequiredMixin, CreateView):
     model = Resume
     template_name = 'resume-edit.html'
-    fields = '__all__'
+    form_class = ResumeForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class ResumeUpdateView(UpdateView):
     model = Resume
-    template_name = 'resume-create.html'
-    fields = '__all__'
+    template_name = 'resume-edit.html'
+    form_class = ResumeForm
+    template_name_suffix = '_update_resume'
 
 class VacancyListView(ListView):
     model = Vacancy
     template_name = 'vacancies.html'
+    queryset = Vacancy.objects.order_by('-published_at')
 
 
 class VacancyCatListView(ListView):
@@ -160,4 +175,13 @@ class VacancyCatListView(ListView):
 
     def get_queryset(self):
         specialty = Specialty.objects.get(code=self.kwargs['category']).id
-        return Vacancy.objects.filter(specialty=specialty)
+        return Vacancy.objects.filter(specialty=specialty).order_by('-published_at')
+
+class VacancySearch(VacancyListView):
+    template_name = 'search.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        return Vacancy.objects.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+            )

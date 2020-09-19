@@ -3,6 +3,7 @@ sys.path.append("c:/Users/anew/stepik1/jobs/jobs/")
 import os
 import json
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'jobs.settings')
+from transliterate import translit
 
 import django
 django.setup()
@@ -29,11 +30,19 @@ def main():
         if all['company'] not in Company.objects.values_list('name', flat='true'):
             print(all['company'])
             company = {}
-            company['title'] = all['company']
+            company['name'] = all['company']
             company['logo'] = all['company_logo']
-            company['location'] = all['location']
-            new_user = Users.objects.create(username=all['company'], password='admin')
-            new_user.save()
+            if 'location' in all.keys():
+                company['location'] = all['location']
+            else:
+                company['location'] = 'Москва'
+            company['employee_count'] = 100
+            username = translit(all['company'].split(' ')[0], 'ru')
+            if username not in User.objects.values_list('username', flat='true'):
+                new_user = User.objects.create(username=username, password='admin')
+                new_user.save()
+            else:
+                new_user = User.objects.get(username=username)
             company['owner'] = new_user
             new_company = Company(**company)
             new_company.save()
@@ -46,8 +55,14 @@ def main():
         else:
             new_vacancy['specialty'] = Specialty.objects.get(title=all['specialty'])
         new_vacancy['skills'] = all['skills']
-        new_vacancy['salary_min'] = all['salary_min']
-        new_vacancy['salary_max'] = all['salary_max']
+        if 'salary_min' in all.keys():
+            new_vacancy['salary_min'] = all['salary_min']
+        else:
+            new_vacancy['salary_min'] = 1
+        if 'salary_max' in all.keys():
+            new_vacancy['salary_max'] = all['salary_max']
+        else:
+            new_vacancy['salary_max'] = 100
         new_vacancy['description'] = all['description']
         vacancy = Vacancy(**new_vacancy)
         vacancy.save()

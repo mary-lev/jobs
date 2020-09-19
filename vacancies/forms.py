@@ -3,7 +3,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from .models import Application, Company, Vacancy, Specialty
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Application, Company, Vacancy, Specialty, Resume
 
 
 class LoginForm(AuthenticationForm):
@@ -111,4 +112,45 @@ class VacancyForm(forms.ModelForm):
             'description',
             Submit('submit', 'Сохранить', css_class='btn btn-info')
                 )
-            
+
+
+class ResumeForm(forms.ModelForm):
+    class Meta:
+        model = Resume
+        fields = ['name', 'surname', 'status', 'salary', 'grade', 'specialty', 'education', 'experience', 'portfolio']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'select'}),
+            'grade': forms.Select(attrs={'class': 'select'}),
+            'education': forms.Textarea(attrs={'class': 'form-control text-uppercase'}),
+            'experience': forms.Textarea(attrs={'rows': "4"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "POST"
+        self.helper.label_class = 'mb-2 text-dark'
+        self.helper.form_show_errors = True
+
+        self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='col-12 col-md-6'),
+                Column('surname', css_class='col-12 col-md-6'),
+                css_class='row'
+                ),
+            Row(
+                Column('status', css_class='col-12 col-md-6'),
+                Column('salary', css_class='col-12 col-md-6'),
+                css_class='row'
+                ),
+            Row(
+                Column('specialty', css_class='col-12 col-md-6'),
+                Column('grade', css_class='col-12 col-md-6'),
+                css_class='row'
+                ),
+            'education',
+            'experience',
+            'portfolio',
+            Submit('submit', 'Сохранить', css_class='btn btn-info')
+            )
