@@ -144,6 +144,11 @@ class ResumeCreateView(CreateView):
     fields = '__all__'
 
 
+class ResumeUpdateView(UpdateView):
+    model = Resume
+    template_name = 'resume-create.html'
+    fields = '__all__'
+
 class VacancyListView(ListView):
     model = Vacancy
     template_name = 'vacancies.html'
