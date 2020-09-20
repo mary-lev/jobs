@@ -145,6 +145,9 @@ class ResumeCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:resume-edit', args=(self.object.id,))
+
 
 class ResumeUpdateView(UpdateView):
     model = Resume
