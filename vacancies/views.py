@@ -121,6 +121,9 @@ class CompanyCreateView(CreateView):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:company-edit', args=(self.object.id,))
+
 
 class CompanyEditView(UpdateView):
     model = Company
