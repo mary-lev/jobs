@@ -48,27 +48,24 @@ def show_one_vacancy(request, vacancy_id):
         'vacancy': vacancy,
         'form': form})
 
+class ResumeCreateView(LoginRequiredMixin, CreateView):
+    model = Resume
+    template_name = 'resume-edit.html'
+    form_class = ResumeForm
 
-def create_vacancy(request):
-    company = Company.objects.filter(owner=request.user).first()
-    if request.method == 'POST':
-        form = VacancyForm(request.POST)
-        if form.is_valid():
-            new_vacancy = Vacancy.objects.create(
-                title=form.cleaned_data['title'],
-                specialty=form.cleaned_data['specialty'],
-                company=company,
-                skills=form.cleaned_data['skills'],
-                description=form.cleaned_data['description'],
-                salary_min=form.cleaned_data['salary_min'],
-                salary_max=form.cleaned_data['salary_max'])
-            new_vacancy.save()
-            return redirect('vacancies:vacancy_edit', pk=new_vacancy.id)
-        else:
-            ''
-    else:
-        form = VacancyForm()
-    return render(request, 'vacancy-edit.html', {'form': form})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class VacancyCreateView(LoginRequiredMixin, CreateView):
+    model = Vacancy
+    template_name = 'vacancy-edit.html'
+    form_class = VacancyForm
+
+    def form_valid(self, form):
+        form.instance.company = Company.objects.get(owner=self.request.user)
+        return super().form_valid(form)
 
 
 def sent_application(request, vacancy_id):
