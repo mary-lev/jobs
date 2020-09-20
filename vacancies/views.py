@@ -27,26 +27,20 @@ def index(request):
         'specialties': specialties, 'companies': companies})
 
 
-def show_one_vacancy(request, vacancy_id):
-    vacancy = Vacancy.objects.get(id=vacancy_id)
-    if request.method == 'POST':
-        form = ApplicationForm(request.POST)
-        if form.is_valid():
-            new_application = Application.objects.create(
-                written_cover_letter=form.cleaned_data['written_cover_letter'],
-                written_phone=form.cleaned_data['written_phone'],
-                written_username=form.cleaned_data['written_username'],
-                user=request.user,
-                vacancy=vacancy)
-            new_application.save()
-            return redirect('vacancies:sent', vacancy_id=vacancy.id)
-        else:
-            ''
-    else:
-        form = ApplicationForm()
-    return render(request, 'vacancy.html', {
-        'vacancy': vacancy,
-        'form': form})
+class ApplicationCreateView(LoginRequiredMixin, CreateView):
+    model = Application
+    form_class = ApplicationForm
+    template_name = 'vacancy.html'
+    success_url = 'vacancies:send'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.vacancy = Vacancy.objects.get(id=self.kwargs.pop('vacancy_id'))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        kwargs['vacancy'] = Vacancy.objects.get(id=self.kwargs.pop('vacancy_id'))
+        return super().get_context_data(**kwargs)
 
 
 def sent_application(request, vacancy_id):
