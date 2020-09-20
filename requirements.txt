@@ -8,6 +8,7 @@ colorama==0.4.3
 Django==3.1.1
 django-crispy-forms==1.9.2
 django-extensions==3.0.8
+django-heroku==0.3.1
 flake8==3.8.3
 idna==2.10
 isort==5.5.2
