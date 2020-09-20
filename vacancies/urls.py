@@ -21,7 +21,7 @@ urlpatterns = [
     path('vacancies/cat/<str:category>/',
          views.VacancyCatListView.as_view(),
          name='vacancies_cat'),
-    path('vacancies/<int:vacancy_id>/send', views.sent_application, name='sent'),
+    path('vacancies/<int:vacancy_id>/sent', views.sent_application, name='sent'),
     path('companies/<int:pk>/', views.CompanyView.as_view(), name='company'),
     path('mycompany', views.has_company, name='mycompany'),
     path('myresume', views.has_resume, name='myresume'),

@@ -22,7 +22,7 @@
             <p>{{ vacancy.description }}
             </p>
           </div>
-         
+         {% if user.is_authenticated %}
 <form method="POST" class="card mt-4 mb-3">
   <div class="card-body mx-3">
   <p class="h5 mt-3 font-weight-normal">Отозваться на вакансию</p>
@@ -30,6 +30,12 @@
     {% crispy form 'bootstrap3' %}
   </div>
 </form>
+{% else %}
+<div>
+  Вы можете отправить отклик на вакансию, если <a href='/login'>авторизуетесь</a> на сайте.
+   <div class="mt-4 text-center"><p>Нет аккаунта? <a href="/register">Зарегистрируйтесь!</a></p></div>
+</div>
+{% endif %}
         </section>
       </div>
     </div>

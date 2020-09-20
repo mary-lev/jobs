@@ -47,11 +47,10 @@ def has_resume(request):
         return render(request, 'resume-create.html', {})
 
 
-class ApplicationCreateView(LoginRequiredMixin, CreateView):
+class ApplicationCreateView(CreateView):
     model = Application
     form_class = ApplicationForm
     template_name = 'vacancy.html'
-    success_url = 'sent.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
