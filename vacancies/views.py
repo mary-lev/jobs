@@ -180,6 +180,7 @@ class VacancyCatListView(ListView):
         specialty = Specialty.objects.get(code=self.kwargs['category']).id
         return Vacancy.objects.filter(specialty=specialty).order_by('-published_at')
 
+
 class VacancySearch(VacancyListView):
     template_name = 'search.html'
 
@@ -187,4 +188,4 @@ class VacancySearch(VacancyListView):
         query = self.request.GET.get('search')
         return Vacancy.objects.filter(
             Q(title__icontains=query) | Q(description__icontains=query)
-            ).order_by('-published_at')
+        ).order_by('-published_at')
