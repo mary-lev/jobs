@@ -27,11 +27,31 @@ def index(request):
         'specialties': specialties, 'companies': companies})
 
 
+def sent_application(request, vacancy_id):
+    return render(request, 'sent.html', {'vacancy_id': vacancy_id})
+
+
+def has_company(request):
+    try:
+        company = Company.objects.get(owner=request.user.id)
+        return redirect('vacancies:company-edit', pk=company.id)
+    except ObjectDoesNotExist:
+        return render(request, 'company-create.html', {})
+
+
+def has_resume(request):
+    try:
+        resume = Resume.objects.get(user=request.user)
+        return redirect('vacancies:resume-edit', pk=resume.id)
+    except ObjectDoesNotExist:
+        return render(request, 'resume-create.html', {})
+
+
 class ApplicationCreateView(LoginRequiredMixin, CreateView):
     model = Application
     form_class = ApplicationForm
     template_name = 'vacancy.html'
-    success_url = 'vacancies:send'
+    success_url = 'sent.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -42,25 +62,8 @@ class ApplicationCreateView(LoginRequiredMixin, CreateView):
         kwargs['vacancy'] = Vacancy.objects.get(id=self.kwargs.pop('vacancy_id'))
         return super().get_context_data(**kwargs)
 
-
-def sent_application(request, vacancy_id):
-    return render(request, 'sent.html', {'vacancy_id': vacancy_id})
-
-
-def has_company(request):
-    company = Company.objects.filter(owner=request.user).first()
-    if company:
-        return redirect('vacancies:company-edit', pk=company.id)
-    else:
-        return redirect('vacancies:company-create')
-
-
-def has_resume(request):
-    try:
-        resume = Resume.objects.get(user=request.user)
-        return redirect('vacancies:resume-edit', pk=resume.id)
-    except ObjectDoesNotExist:
-        return render(request, 'resume-create.html', {})
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:sent', args=(self.object.vacancy_id,))
 
 
 class MySignupView(CreateView):
@@ -79,11 +82,14 @@ class VacancyCreateView(LoginRequiredMixin, CreateView):
     model = Vacancy
     template_name = 'vacancy-edit.html'
     form_class = VacancyForm
-    success_url = '/'
+    success_url = 'vacancies:vacancy-list'
 
     def form_valid(self, form):
         form.instance.company = Company.objects.get(owner=self.request.user)
         return super().form_valid(form)
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:my_vacancies')
 
 
 class VacancyEditView(UpdateView):
@@ -109,7 +115,7 @@ class CompanyCreateView(CreateView):
     model = Company
     template_name = 'company-edit.html'
     form_class = CompanyForm
-    success_url = '/'
+    success_url = 'vacancies:company-edit'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -134,7 +140,6 @@ class ResumeCreateView(LoginRequiredMixin, CreateView):
     model = Resume
     template_name = 'resume-edit.html'
     form_class = ResumeForm
-    success_url = '/'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
