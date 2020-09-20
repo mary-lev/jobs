@@ -6,15 +6,20 @@
   <main class="container mt-3 pb-5">
     <section class="col-12 col-lg-6 offset-lg-3 mt-5 card">
       <div class="card-body px-3 pb-4">
-        <h1 class="h4 pt-2 pb-3">{% if resume %}Мое резюме{% else %}Создать резюме{% endif %}</h1>
-      
+        <h1 class="h4 pt-2 pb-3">{% if resume %}Мое резюме{% else %}Создать резюме{% endif %}</h1>      
         </div>
+        
+        {% if messages %} 
+        	{% for message in messages %} 
+        	<p class="alert alert-info" role="alert">Ваше резюме обновлено!</p>
+        	{% endfor %}
+        {% endif %}
       
       {% crispy form %}
-<div id='form-errors'>{{ form_errors }}</div>
+
     </section>
   </main>
 
  {% endblock %}
 
-   <p class="alert alert-info" role="alert">Ваше резюме обновлено!</p>
+  

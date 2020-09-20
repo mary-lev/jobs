@@ -20,7 +20,11 @@
             <!-- Tab -->
             <section>
               <h2 class="h4 pt-2 pb-3">{{ form.title.value }}</h2>
-              <p class="alert alert-info" role="alert">Вакансия обновлена</p>
+              {% if messages %}
+                {% for message in messages %}
+                <p class="alert alert-info" role="alert">Вакансия обновлена</p>
+                {% endfor %}
+              {% endif %}
              
 
               {% crispy form %}

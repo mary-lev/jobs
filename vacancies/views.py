@@ -5,6 +5,7 @@ from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -96,6 +97,10 @@ class VacancyEditView(UpdateView):
     template_name = 'vacancy-edit.html'
     form_class = VacancyForm
 
+    def form_valid(self, form):
+        messages.success(self.request, "some message")
+        return super().form_valid(form)
+
     def get_success_url(self, **kwargs):
         return reverse_lazy('vacancies:vacancy-edit', args=(self.object.id,))
 
@@ -128,6 +133,10 @@ class CompanyEditView(UpdateView):
     template_name = 'company-edit.html'
     form_class = CompanyForm
 
+    def form_valid(self, form):
+        messages.success(self.request, "some message")
+        return super().form_valid(form)
+
     def get_success_url(self, **kwargs):
         return reverse_lazy('vacancies:company-edit', args=(self.object.id,))
 
@@ -159,6 +168,10 @@ class ResumeUpdateView(UpdateView):
     model = Resume
     template_name = 'resume-edit.html'
     form_class = ResumeForm
+
+    def form_valid(self, form):
+        messages.success(self.request, "some message")
+        return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('vacancies:resume-edit', args=(self.object.id,))
