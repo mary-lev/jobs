@@ -141,7 +141,7 @@ class CompanyView(DetailView):
 class CompanyListView(ListView):
     model = Company
     template_name = 'companies.html'
-    
+
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     model = Resume
