@@ -32,7 +32,7 @@ urlpatterns = [
     path('mycompany/vacancy-create', views.VacancyCreateView.as_view(), name='vacancy-create'),
     path('resume-edit/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume-edit'),
     path('resume-create', views.ResumeCreateView.as_view(), name='resume-create'),
-    path('search/', views.VacancySearch.as_view(), name='search'),
+    path('search', views.VacancySearch.as_view(), name='search'),
 ]
 
 if settings.DEBUG:
