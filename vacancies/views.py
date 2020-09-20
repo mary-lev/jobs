@@ -86,7 +86,7 @@ def has_resume(request):
     try:
         resume = Resume.objects.get(user=request.user)
         return redirect('vacancies:resume-edit', pk=resume.id)
-    except DoesNotExist:
+    except ObjectDoesNotExist:
         return render(request, 'resume-create.html', {})
 
 
