@@ -48,15 +48,6 @@ def show_one_vacancy(request, vacancy_id):
         'vacancy': vacancy,
         'form': form})
 
-class ResumeCreateView(LoginRequiredMixin, CreateView):
-    model = Resume
-    template_name = 'resume-edit.html'
-    form_class = ResumeForm
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
 
 class VacancyCreateView(LoginRequiredMixin, CreateView):
     model = Vacancy
@@ -98,12 +89,6 @@ class MyLoginView(LoginView):
     form_class = LoginForm
     template_name = 'login.html'
     success_url = '/'
-
-
-class VacancyCreateView(CreateView):
-    model = Vacancy
-    template_name = 'vacancy-edit.html'
-    form_class = VacancyForm
 
 
 class VacancyEditView(UpdateView):
