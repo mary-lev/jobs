@@ -15,6 +15,7 @@ urlpatterns = [
     path('register', views.MySignupView.as_view(), name='register'),
     path('login', views.MyLoginView.as_view(), name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
+    path('companies', views.CompanyListView.as_view(), name='companies'),
     path('vacancies', views.VacancyListView.as_view(), name='vacancies'),
     path('vacancies/<int:vacancy_id>/', views.ApplicationCreateView.as_view(), name='vacancy'),
     path('vacancies/cat/<str:category>/',

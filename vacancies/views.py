@@ -115,7 +115,6 @@ class CompanyCreateView(CreateView):
     model = Company
     template_name = 'company-edit.html'
     form_class = CompanyForm
-    success_url = 'vacancies:company-edit'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -138,6 +137,11 @@ class CompanyView(DetailView):
     model = Company
     template_name = 'company.html'
 
+
+class CompanyListView(ListView):
+    model = Company
+    template_name = 'companies.html'
+    
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     model = Resume
