@@ -83,10 +83,11 @@ def has_company(request):
 
 
 def has_resume(request):
-    if Resume.objects.get(user=request.user):
+    try:
         resume = Resume.objects.get(user=request.user)
         return redirect('vacancies:resume-edit', pk=resume.id)
-    return render(request, 'resume-create.html', {})
+    except DoesNotExist:
+        return render(request, 'resume-create.html', {})
 
 
 class MySignupView(CreateView):
