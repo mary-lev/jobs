@@ -83,9 +83,9 @@ def has_company(request):
 
 
 def has_resume(request):
-    resume = Resume.objects.filter(user=request.user).first()
+    resume = Resume.objects.get(user=request.user)
     if resume:
-        return render(request, 'resume-edit.html', {'resume': resume.id})
+        return redirect('vacancies:resume-edit', pk=resume.id)
     return render(request, 'resume-create.html', {})
 
 
@@ -161,7 +161,10 @@ class ResumeUpdateView(UpdateView):
     model = Resume
     template_name = 'resume-edit.html'
     form_class = ResumeForm
-    template_name_suffix = '_update_resume'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('vacancies:resume-edit', args=(self.object.id,))
+
 
 class VacancyListView(ListView):
     model = Vacancy
@@ -184,4 +187,4 @@ class VacancySearch(VacancyListView):
         query = self.request.GET.get('search')
         return Vacancy.objects.filter(
             Q(title__icontains=query) | Q(description__icontains=query)
-            )
+            ).order_by('-published_at')

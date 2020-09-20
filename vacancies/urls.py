@@ -29,7 +29,7 @@ urlpatterns = [
     path('vacancy-list', views.MyVacancyListView.as_view(), name='my_vacancies'),
     path('vacancy-edit/<int:pk>/', views.VacancyEditView.as_view(), name='vacancy-edit'),
     path('vacancy-create', views.create_vacancy, name='vacancy-create'),
-    path('resume-edit', views.ResumeUpdateView.as_view(), name='resume-edit'),
+    path('resume-edit/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume-edit'),
     path('resume-create', views.ResumeCreateView.as_view(), name='resume-create'),
     path('search/', views.VacancySearch.as_view(), name='search'),
 ]
