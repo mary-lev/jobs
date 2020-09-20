@@ -28,7 +28,7 @@
                 <a href="{% url 'vacancies:mycompany' %}" class="dropdown-item py-2">Компания</a>
                 <a href="{% url 'vacancies:logout' %}?next=/" class="dropdown-item py-2">Выйти</a>
               </div>
-            </div>{% else %}Вход{% endif %}
+            </div>{% else %}<a href="{%  url 'vacancies:login' %}">Вход</a>{% endif %}
           </li>
         </ul>
       </div>
