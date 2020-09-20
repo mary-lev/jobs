@@ -83,8 +83,8 @@ def has_company(request):
 
 
 def has_resume(request):
-    resume = Resume.objects.get(user=request.user)
-    if resume:
+    if Resume.objects.get(user=request.user):
+        resume = Resume.objects.get(user=request.user)
         return redirect('vacancies:resume-edit', pk=resume.id)
     return render(request, 'resume-create.html', {})
 
