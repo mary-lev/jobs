@@ -49,16 +49,6 @@ def show_one_vacancy(request, vacancy_id):
         'form': form})
 
 
-class VacancyCreateView(LoginRequiredMixin, CreateView):
-    model = Vacancy
-    template_name = 'vacancy-edit.html'
-    form_class = VacancyForm
-
-    def form_valid(self, form):
-        form.instance.company = Company.objects.get(owner=self.request.user)
-        return super().form_valid(form)
-
-
 def sent_application(request, vacancy_id):
     return render(request, 'sent.html', {'vacancy_id': vacancy_id})
 
@@ -91,6 +81,17 @@ class MyLoginView(LoginView):
     success_url = '/'
 
 
+class VacancyCreateView(LoginRequiredMixin, CreateView):
+    model = Vacancy
+    template_name = 'vacancy-edit.html'
+    form_class = VacancyForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.company = Company.objects.get(owner=self.request.user)
+        return super().form_valid(form)
+
+
 class VacancyEditView(UpdateView):
     model = Vacancy
     template_name = 'vacancy-edit.html'
@@ -113,7 +114,12 @@ class MyVacancyListView(ListView):
 class CompanyCreateView(CreateView):
     model = Company
     template_name = 'company-edit.html'
-    fields = '__all__'
+    form_class = CompanyForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 class CompanyEditView(UpdateView):
