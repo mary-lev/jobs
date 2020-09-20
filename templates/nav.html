@@ -18,7 +18,8 @@
           </li>
         </ul>
         <ul class="navbar-nav col-2 justify-content-end">
-          <li class="nav-item active">{% if user.is_authenticated %}
+          {% if user.is_authenticated %}
+          <li class="nav-item active">
             <div class="btn-group">
               <button type="button" class="btn dropdown-toggle font-weight-bold" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.first_name }} {{user.last_name }}
               </button>
@@ -28,8 +29,10 @@
                 <a href="{% url 'vacancies:mycompany' %}" class="dropdown-item py-2">Компания</a>
                 <a href="{% url 'vacancies:logout' %}?next=/" class="dropdown-item py-2">Выйти</a>
               </div>
-            </div>{% else %}<a href="{%  url 'vacancies:login' %}">Вход</a>{% endif %}
+            </div>
           </li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link text-dark font-weight-bold" href="{%  url 'vacancies:login' %}">Вход</a>{% endif %}</li>
         </ul>
       </div>
     </nav>
