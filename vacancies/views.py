@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
@@ -92,7 +93,7 @@ class VacancyCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('vacancies:my_vacancies')
 
 
-class VacancyEditView(UpdateView):
+class VacancyEditView(LoginRequiredMixin, UpdateView):
     model = Vacancy
     template_name = 'vacancy-edit.html'
     form_class = VacancyForm
@@ -105,7 +106,7 @@ class VacancyEditView(UpdateView):
         return reverse_lazy('vacancies:vacancy-edit', args=(self.object.id,))
 
 
-class MyVacancyListView(ListView):
+class MyVacancyListView(LoginRequiredMixin, ListView):
     model = Vacancy
     template_name = 'vacancy-list.html'
 
@@ -115,7 +116,7 @@ class MyVacancyListView(ListView):
         return vacancies
 
 
-class CompanyCreateView(CreateView):
+class CompanyCreateView(LoginRequiredMixin, CreateView):
     model = Company
     template_name = 'company-edit.html'
     form_class = CompanyForm
@@ -128,7 +129,7 @@ class CompanyCreateView(CreateView):
         return reverse_lazy('vacancies:company-edit', args=(self.object.id,))
 
 
-class CompanyEditView(UpdateView):
+class CompanyEditView(LoginRequiredMixin, UpdateView):
     model = Company
     template_name = 'company-edit.html'
     form_class = CompanyForm
@@ -164,7 +165,7 @@ class ResumeCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('vacancies:resume-edit', args=(self.object.id,))
 
 
-class ResumeUpdateView(UpdateView):
+class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     model = Resume
     template_name = 'resume-edit.html'
     form_class = ResumeForm
