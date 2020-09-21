@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Company(models.Model):
@@ -73,14 +73,14 @@ class Resume(models.Model):
         ('1', 'Не ищу работу'),
         ('2', 'Рассматриваю предложения'),
         ('3', 'Ищу работу'),
-        )
+    )
     GRADE_CHOICES = (
         ('1', 'Стажер'),
         ('2', 'Джуниор'),
         ('3', 'Миддл'),
         ('4', 'Синьор'),
         ('5', 'Лид'),
-        )
+    )
     user = models.ForeignKey(User, related_name='resumes', on_delete=models.CASCADE)
     name = models.CharField(max_length=20, verbose_name='Имя')
     surname = models.CharField(max_length=30, verbose_name='Фамилия')

@@ -1,16 +1,16 @@
-from django.db.models import Count, Q
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.http import HttpResponseNotFound, HttpResponseServerError
-from django.contrib.auth.views import LoginView
-from django.views.generic import ListView, CreateView, UpdateView
-from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count, Q
+from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic.detail import DetailView
 
-from .models import Vacancy, Company, Specialty, Application, Resume
 from .forms import LoginForm, RegisterForm, ApplicationForm, CompanyForm, VacancyForm, ResumeForm
+from .models import Vacancy, Company, Specialty, Application, Resume
 
 
 def custom_handler404(request, exception):
