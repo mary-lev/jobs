@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
