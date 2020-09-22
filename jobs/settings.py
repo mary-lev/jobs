@@ -125,6 +125,7 @@ MEDIA_SPECIALITY_IMAGE_DIR = 'speciality_images'
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
