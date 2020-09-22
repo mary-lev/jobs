@@ -10,17 +10,11 @@ class Company(models.Model):
     employee_count = models.IntegerField(verbose_name='Количество человек в компании', blank=True)
     owner = models.ForeignKey(User, related_name='companies', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
-
 
 class Specialty(models.Model):
     code = models.CharField(max_length=100, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     picture = models.ImageField(upload_to='speciality_images', blank=True, null=True)
-
-    def __str__(self):
-        return self.title
 
 
 class Vacancy(models.Model):
@@ -47,9 +41,6 @@ class Vacancy(models.Model):
     salary_min = models.IntegerField(verbose_name='Зарплата от')
     salary_max = models.IntegerField(verbose_name='Зарплата до')
     published_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
 
 
 class Application(models.Model):

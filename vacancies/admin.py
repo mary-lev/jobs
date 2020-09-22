@@ -2,8 +2,29 @@ from django.contrib import admin
 
 from .models import Vacancy, Specialty, Company, Application, Resume
 
-admin.site.register(Vacancy)
-admin.site.register(Specialty)
-admin.site.register(Company)
-admin.site.register(Application)
-admin.site.register(Resume)
+
+class VacancyAdmin(admin.ModelAdmin):
+    pass
+
+
+class SpecialtyAdmin(admin.ModelAdmin):
+    pass
+
+
+class CompanyAdmin(admin.ModelAdmin):
+    pass
+
+
+class ApplicationAdmin(admin.ModelAdmin):
+    pass
+
+
+class ResumeAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Vacancy, VacancyAdmin)
+admin.site.register(Specialty, SpecialtyAdmin)
+admin.site.register(Company, CompanyAdmin)
+admin.site.register(Application, ApplicationAdmin)
+admin.site.register(Resume, ResumeAdmin)
