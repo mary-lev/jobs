@@ -11,6 +11,7 @@ class Company(models.Model):
     owner = models.ForeignKey(User, related_name='companies', on_delete=models.CASCADE)
 
     def __str__(self):
+        '''Для отображения названия компании в админке.'''
         return self.name
 
 
@@ -20,6 +21,7 @@ class Specialty(models.Model):
     picture = models.ImageField(upload_to='speciality_images', blank=True, null=True)
 
     def __str__(self):
+        '''Для отображения названия специальности в админке.'''
         return self.title
 
 
@@ -49,6 +51,7 @@ class Vacancy(models.Model):
     published_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        '''Для отображения названия вакансии в админке.'''
         return self.title
 
 
