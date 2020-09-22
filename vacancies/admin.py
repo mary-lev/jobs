@@ -3,16 +3,9 @@ from django.contrib import admin
 from .models import Vacancy, Specialty, Company, Application, Resume
 
 
-class VacancyAdmin(admin.ModelAdmin):
-    pass
-
-
 class SpecialtyAdmin(admin.ModelAdmin):
-    pass
-
-
-class CompanyAdmin(admin.ModelAdmin):
-    pass
+    def __str__(self):
+        return self.model.title
 
 
 class ApplicationAdmin(admin.ModelAdmin):
@@ -21,6 +14,18 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 class ResumeAdmin(admin.ModelAdmin):
     pass
+
+
+class VacancyAdmin(admin.ModelAdmin):
+    pass
+
+
+class VacancyInline(admin.TabularInline):
+    model = Vacancy
+
+
+class CompanyAdmin(admin.ModelAdmin):
+    inlines = (VacancyInline,)
 
 
 admin.site.register(Vacancy, VacancyAdmin)
