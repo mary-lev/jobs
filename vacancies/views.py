@@ -182,6 +182,11 @@ class VacancyListView(ListView):
     template_name = 'vacancies.html'
     queryset = Vacancy.objects.order_by('-published_at')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Все вакансии"
+        return context
+
 
 class VacancyCatListView(ListView):
     model = Vacancy
@@ -190,6 +195,11 @@ class VacancyCatListView(ListView):
     def get_queryset(self):
         specialty = Specialty.objects.get(code=self.kwargs['category']).id
         return Vacancy.objects.filter(specialty=specialty).order_by('-published_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = Specialty.objects.get(code=self.kwargs['category']).title
+        return context
 
 
 class VacancySearch(VacancyListView):

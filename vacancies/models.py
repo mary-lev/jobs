@@ -11,22 +11,22 @@ class Company(models.Model):
     owner = models.ForeignKey(User, related_name='companies', on_delete=models.CASCADE)
 
     def __str__(self):
-        '''Для отображения названия компании в админке.'''
+        """Для отображения названия компании в админке."""
         return self.name
 
 
 class Specialty(models.Model):
-    code = models.CharField(max_length=100, blank=True, null=True)
-    title = models.CharField(max_length=100, blank=True, null=True)
-    picture = models.ImageField(upload_to='speciality_images', blank=True, null=True)
+    code = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+    picture = models.ImageField(upload_to='speciality_images')
 
     def __str__(self):
-        '''Для отображения названия специальности в админке.'''
+        """Для отображения названия специальности в админке."""
         return self.title
 
 
 class Vacancy(models.Model):
-    title = models.CharField(max_length=40, blank=True, null=True, verbose_name='Название вакансии')
+    title = models.CharField(max_length=40, verbose_name='Название вакансии')
     specialty = models.ForeignKey(
         Specialty,
         related_name='vacancies',
@@ -51,7 +51,7 @@ class Vacancy(models.Model):
     published_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        '''Для отображения названия вакансии в админке.'''
+        """Для отображения названия вакансии в админке."""
         return self.title
 
 
@@ -64,11 +64,13 @@ class Application(models.Model):
     vacancy = models.ForeignKey(
         Vacancy,
         related_name='applications',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE
+        )
     user = models.ForeignKey(
         User,
         related_name='applications',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE
+        )
 
 
 class Resume(models.Model):
@@ -76,14 +78,14 @@ class Resume(models.Model):
         ('1', 'Не ищу работу'),
         ('2', 'Рассматриваю предложения'),
         ('3', 'Ищу работу'),
-    )
+        )
     GRADE_CHOICES = (
         ('1', 'Стажер'),
         ('2', 'Джуниор'),
         ('3', 'Миддл'),
         ('4', 'Синьор'),
         ('5', 'Лид'),
-    )
+        )
     user = models.ForeignKey(User, related_name='resumes', on_delete=models.CASCADE)
     name = models.CharField(max_length=20, verbose_name='Имя')
     surname = models.CharField(max_length=30, verbose_name='Фамилия')
